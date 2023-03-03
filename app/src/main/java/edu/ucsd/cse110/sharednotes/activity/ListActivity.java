@@ -35,7 +35,7 @@ import edu.ucsd.cse110.sharednotes.viewmodel.ListViewModel;
  * trigger behavior through a callback or observer.
  * <p>
 
- * ──Activity ╶╶(observes events on)╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮    [Presenter - Behavior]
+ * ──Activity ╶╶(observes events on)╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮    [Presenter - Behavior] 
  *   │                                                    ╎
  *   ├──(calls)────→ Repository ←╶╶╶╶╶╮                   ╎    [Model]
  *   │               ├──→ DAO         ╎                   ╎    [Model - Local Backend]

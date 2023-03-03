@@ -19,6 +19,7 @@ import edu.ucsd.cse110.sharednotes.model.Note;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
     private List<Note> notes = Collections.emptyList();
     private Consumer<Note> onNoteClicked;
+    //Consumer is the name for a function talking one argument of Note type and returning nothing
     private Consumer<Note> onNoteDeleteClicked;
 
     public void setOnNoteClickListener(Consumer<Note> onNoteClicked) {
@@ -49,6 +50,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             this.deleteButton = itemView.findViewById(R.id.note_item_delete);
         }
 
+        /**
+         * lab6在构造器内部进行了监听
+         * @param note
+         */
         public void bind(Note note) {
             nameView.setText(note.title);
             previewView.setText(note.content);
