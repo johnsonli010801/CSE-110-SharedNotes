@@ -3,33 +3,17 @@ package edu.ucsd.cse110.sharednotes.model;
 import android.util.Log;
 
 import androidx.annotation.AnyThread;
-import androidx.annotation.MainThread;
 import androidx.annotation.WorkerThread;
 
-import com.google.gson.Gson;
-
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import edu.ucsd.cse110.sharednotes.R;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class NoteAPI {
-    // TODO: Implement the API using OkHttp!
-    // TODO: - getNote (maybe getNoteAsync)
-    // TODO: - putNote (don't need putNotAsync, probably)
-    // TODO: Read the docs: https://square.github.io/okhttp/
-    // TODO: Read the docs: https://sharednotes.goto.ucsd.edu/docs
-
     private volatile static NoteAPI instance = null;
 
     private OkHttpClient client;
@@ -104,29 +88,31 @@ public class NoteAPI {
         return null;
     }
 
-    public static final MediaType JSON
-            = MediaType.get("application/json; charset=utf-8");
-
-
     //json is the string representation of a note.
-    public void putNote(String title, Note note){
-        String json = note.toJSON();
+    public void putNote(Note note){
+        var title = note.title.replace(" ", "%20");
+        final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
+        String json = note.toJSON();
         RequestBody body = RequestBody.create(json, JSON);
         var request = new Request.Builder()
                 .url("https://sharednotes.goto.ucsd.edu/notes/" + title)
                 .method("PUT", body)
                 .build();
 
-        try (var response = client.newCall(request).execute()) {
-            if (request.body() == null) {
-                Log.e("PUT", "FAIL");
-            } else {
-                var bodyString = response.body().string();
-                Log.i("PUT", bodyString);
+        var executor = Executors.newSingleThreadExecutor();
+
+        executor.execute(() -> {
+            try (var response = client.newCall(request).execute()) {
+                if (request.body() == null) {
+                    Log.e("PUT", "FAIL");
+                } else {
+                    var bodyString = response.body().string();
+                    Log.i("PUT", bodyString);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 }

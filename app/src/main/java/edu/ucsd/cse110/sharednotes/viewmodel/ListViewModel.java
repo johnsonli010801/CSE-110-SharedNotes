@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 import edu.ucsd.cse110.sharednotes.model.Note;
+import edu.ucsd.cse110.sharednotes.model.NoteAPI;
 import edu.ucsd.cse110.sharednotes.model.NoteDatabase;
 import edu.ucsd.cse110.sharednotes.model.NoteRepository;
 
@@ -20,8 +21,9 @@ public class ListViewModel extends AndroidViewModel {
         super(application);
         var context = application.getApplicationContext();
         var db = NoteDatabase.provide(context);
+        var api = NoteAPI.provide();
         var dao = db.getDao();
-        this.repo = new NoteRepository(dao);
+        this.repo = new NoteRepository(dao, api);
     }
 
     /**
@@ -43,7 +45,7 @@ public class ListViewModel extends AndroidViewModel {
     public LiveData<Note> getOrCreateNote(String title) {
         if (!repo.existsLocal(title)) {
             var note = new Note(title, "");
-            repo.upsertLocal(note);
+            repo.upsertLocal(note, false);
         }
 
         return repo.getLocal(title);
