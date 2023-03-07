@@ -91,7 +91,7 @@ public class NoteAPI {
     //json is the string representation of a note.
     public void putNote(Note note){
         var title = note.title.replace(" ", "%20");
-        final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        final MediaType JSON = MediaType.get("application/json");
 
         String json = note.toJSON();
         RequestBody body = RequestBody.create(json, JSON);
